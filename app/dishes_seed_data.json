@@ -1,0 +1,74 @@
+{
+  "dishes": [
+    {
+      "name": "Spicy Noodles",
+      "description": "Delicious Asian-style noodles with a spicy kick",
+      "price": 18.00,
+      "rating": 4.8,
+      "category": "main",
+      "image_url": "https://example.com/noodles.png",
+      "is_new": true,
+      "is_popular": false
+    },
+    {
+      "name": "Margherita Pizza",
+      "description": "Classic Italian pizza with mozzarella and basil",
+      "price": 22.00,
+      "rating": 4.9,
+      "category": "main",
+      "image_url": "https://example.com/pizza.png",
+      "is_new": false,
+      "is_popular": true
+    },
+    {
+      "name": "Gourmet Burger",
+      "description": "Juicy beef patty with premium toppings",
+      "price": 19.00,
+      "rating": 4.7,
+      "category": "main",
+      "image_url": "https://example.com/burger.png",
+      "is_new": false,
+      "is_popular": true
+    },
+    {
+      "name": "Fattoush Salad",
+      "description": "Mediterranean salad with crispy pita bread",
+      "price": 24.00,
+      "rating": 4.9,
+      "category": "salad",
+      "image_url": "https://example.com/fattoush.png",
+      "is_new": false,
+      "is_popular": false
+    },
+    {
+      "name": "Caesar Salad",
+      "description": "Classic Caesar salad with parmesan and croutons",
+      "price": 20.00,
+      "rating": 4.8,
+      "category": "salad",
+      "image_url": "https://example.com/caesar.png",
+      "is_new": false,
+      "is_popular": false
+    },
+    {
+      "name": "Chocolate Cake",
+      "description": "Rich chocolate cake with creamy frosting",
+      "price": 15.00,
+      "rating": 4.9,
+      "category": "dessert",
+      "image_url": "https://example.com/cake.png",
+      "is_new": false,
+      "is_popular": true
+    },
+    {
+      "name": "Ice Cream",
+      "description": "Creamy vanilla ice cream",
+      "price": 12.00,
+      "rating": 4.7,
+      "category": "dessert",
+      "image_url": "https://example.com/icecream.png",
+      "is_new": false,
+      "is_popular": false
+    }
+  ]
+}
