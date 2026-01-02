@@ -26,7 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(dishes.router)
 
 app.include_router(dishes.router)
 
