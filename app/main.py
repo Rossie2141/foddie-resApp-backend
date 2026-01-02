@@ -19,7 +19,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",       # local dev
-        # "https://foddiebackendapp.vercel.app",  # prod frontend (later)
+        "https://foodi-res-app.vercel.app"  # prod frontend (later)
     ],
     allow_credentials=True,
     allow_methods=["*"],
