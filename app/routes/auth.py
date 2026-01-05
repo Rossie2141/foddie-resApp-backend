@@ -59,3 +59,11 @@ def login(request: Request, details: LoginRequest, db: Session = Depends(get_db)
     # Set Session
     request.session["user_id"] = user.id
     return {"message": "Logged in successfully"}
+
+
+@router.get("/me")
+def me(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=401)
+    return {"id": user_id}
