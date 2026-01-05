@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from app.database import Base, engine
-from app.routes import dishes, auth  # Added auth router
+from app.routes import dishes, auth
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.sessions import SessionMiddleware # Import this
+from starlette.middleware.sessions import SessionMiddleware
+import os
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -12,30 +13,30 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# 1. Add Session Middleware 
-# In production, move 'secret-key' to an environment variable (.env)
+# Session Middleware
 app.add_middleware(
-    SessionMiddleware, 
-    secret_key="your_very_secret_random_string",
-    session_cookie="foodi_session",  # Name of the cookie
-    same_site="lax",                 # Essential for local development
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET", "dev-secret-change-me"),
+    session_cookie="foodi_session",
+    same_site="none",      # REQUIRED for cross-site (Vercel)
+    https_only=True        # REQUIRED when same_site="none"
 )
 
-# 2. Add CORS Middleware
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",       
-        "https://foodi-res-app.vercel.app" 
+        "http://localhost:5173",
+        "https://foodi-res-app.vercel.app",
     ],
-    allow_credentials=True,           # MUST be True for sessions
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 3. Include Routers
+# Routers
 app.include_router(dishes.router)
-app.include_router(auth.router) # You will create this next
+app.include_router(auth.router)
 
 @app.get("/")
 def root():
