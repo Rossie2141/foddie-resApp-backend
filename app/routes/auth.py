@@ -67,3 +67,9 @@ def me(request: Request):
     if not user_id:
         raise HTTPException(status_code=401)
     return {"id": user_id}
+
+@router.post("/logout")
+def logout(request: Request):
+    # This removes all data from the session cookie
+    request.session.clear() 
+    return {"message": "Logged out successfully"}
