@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.database import Base, engine
-from app.routes import dishes, auth
+from app.routes import dishes, auth, user_data
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 import os
@@ -37,6 +37,7 @@ app.add_middleware(
 # Routers
 app.include_router(dishes.router)
 app.include_router(auth.router)
+app.include_router(user_data.router)
 
 @app.get("/")
 def root():
