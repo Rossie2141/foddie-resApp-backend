@@ -20,12 +20,20 @@ class CartItemCreate(BaseModel):
 @router.get("/cart")
 def get_cart(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Not authorized")
-    
-    # Joins with Dish table to get name, price, and image for the frontend
-    items = db.query(CartItem).filter(CartItem.user_id == user_id).all()
-    return items
+    if not user_id: return []
+
+    # Join CartItem with Dish to get the name and price
+    results = db.query(Dish, CartItem.quantity).join(
+        CartItem, Dish.id == CartItem.product_id
+    ).filter(CartItem.user_id == user_id).all()
+
+    return [{
+        "product_id": dish.id,
+        "name": dish.name,
+        "price": dish.price,
+        "quantity": qty,
+        "image": dish.image # if you have one
+    } for dish, qty in results]
 
 @router.post("/cart/add")
 def add_to_cart(item: CartItemCreate, request: Request, db: Session = Depends(get_db)):
