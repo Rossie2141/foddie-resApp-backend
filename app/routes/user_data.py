@@ -20,20 +20,34 @@ class CartItemCreate(BaseModel):
 @router.get("/cart")
 def get_cart(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
-    if not user_id: return []
+    
+    # If no user is logged in, return empty list instead of crashing
+    if not user_id:
+        return []
 
-    # Join CartItem with Dish to get the name and price
-    results = db.query(Dish, CartItem.quantity).join(
-        CartItem, Dish.id == CartItem.product_id
-    ).filter(CartItem.user_id == user_id).all()
+    try:
+        # We join the Dish table and CartItem table
+        # This allows us to get the price and name which aren't in the cart_items table
+        results = db.query(Dish, CartItem.quantity).join(
+            CartItem, Dish.id == CartItem.product_id
+        ).filter(CartItem.user_id == user_id).all()
 
-    return [{
-        "product_id": dish.id,
-        "name": dish.name,
-        "price": dish.price,
-        "quantity": qty,
-        "image": dish.image # if you have one
-    } for dish, qty in results]
+        # Format the data into a list of dictionaries
+        cart_data = []
+        for dish, qty in results:
+            cart_data.append({
+                "product_id": dish.id,
+                "name": dish.name,
+                "price": dish.price,
+                "quantity": qty,
+                "image": getattr(dish, 'image', None) # Safely get image if it exists
+            })
+        
+        return cart_data
+
+    except Exception as e:
+        print(f"Error fetching cart: {e}")
+        raise HTTPException(status_code=500, detail="Database join failed. Check if Dish and CartItem models are linked.")
 
 @router.post("/cart/add")
 def add_to_cart(item: CartItemCreate, request: Request, db: Session = Depends(get_db)):
