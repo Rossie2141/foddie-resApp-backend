@@ -123,13 +123,18 @@ def toggle_favorite(product_id: int, request: Request, db: Session = Depends(get
         return {"message": "Added to favorites", "status": "liked"}
 
 @router.post("/cart/update-quantity")
-def update_quantity(product_id: int, action: str, request: Request, db: Session = Depends(get_db)):
+def update_quantity(
+    product_id: int,
+    action: str,
+    request: Request,
+    db: Session = Depends(get_db)
+):
     user_id = request.session.get("user_id")
     if not user_id:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     item = db.query(CartItem).filter(
-        CartItem.user_id == user_id, 
+        CartItem.user_id == user_id,
         CartItem.product_id == product_id
     ).first()
 
@@ -138,12 +143,18 @@ def update_quantity(product_id: int, action: str, request: Request, db: Session 
 
     if action == "increase":
         item.quantity += 1
+        db.commit()
+        return {"status": "success", "new_quantity": item.quantity}
+
     elif action == "decrease":
         if item.quantity > 1:
             item.quantity -= 1
+            db.commit()
+            return {"status": "success", "new_quantity": item.quantity}
         else:
-            # Optional: Remove item if it hits 0
             db.delete(item)
-    
-    db.commit()
-    return {"status": "success", "new_quantity": item.quantity}
+            db.commit()
+            return {"status": "success", "new_quantity": 0}
+
+    else:
+        raise HTTPException(status_code=400, detail="Invalid action")
